@@ -20,22 +20,16 @@ class Actor < ApplicationRecord
   # end
 
   def filmography
-    array_of_movie_ids = Array.new
+    array_of_movies = Array.new
 
-    my_characters = self.characters
-
-    my_characters.each do |a_character|
-      the_movie = a_character.movie
-
-      array_of_movie_ids.push(the_movie.id)
+    self.characters.each do |a_character|
+     array_of_movies.push(a_character.movie)
     end
 
-    matching_movies = Movie.where({ :id => array_of_movie_ids })
-
-    return matching_movies
+    return array_of_movies
   end
 
   has_many(:characters, {:class_name => "Character", :foreign_key => "actor_id" })
 
-  belongs_to(:filmography, {:class_name => "Character", :foreign_key => "actor_id" })
+  has_many(:filmography, {:through => "Character", :source => :movie })
 end
